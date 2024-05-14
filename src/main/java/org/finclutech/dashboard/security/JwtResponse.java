@@ -1,6 +1,5 @@
 package org.finclutech.dashboard.security;
 
-
 public class JwtResponse {
     private final String jwtToken;
 
