@@ -6,11 +6,13 @@ import org.finclutech.dashboard.repository.ApplicationRepository;
 import org.finclutech.dashboard.service.ApplicationService;
 import org.finclutech.dashboard.service.mapper.ApplicationMapper;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,6 +63,12 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .map(ApplicationMapper.INSTANCE::toDto)
                 .collect(Collectors.toList());
     }
+    @Override
+    public List<Application> findApplications(String searchText, LocalDate createdDate, LocalDate updatedDate) {
+        Specification<Application> spec = ApplicationSpecification.getApplicationsByFilter(searchText, createdDate, updatedDate);
+        return applicationRepository.findAll(spec);
+    }
+
 
     @Override
     @Transactional

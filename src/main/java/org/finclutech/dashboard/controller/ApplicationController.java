@@ -1,12 +1,15 @@
 package org.finclutech.dashboard.controller;
 
 import org.finclutech.dashboard.model.dto.ApplicationDTO;
+import org.finclutech.dashboard.model.entity.Application;
 import org.finclutech.dashboard.service.ApplicationService;
 import org.finclutech.dashboard.service.impl.ApplicationDataServiceImpl;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -37,6 +40,17 @@ public class ApplicationController {
             return ResponseEntity.internalServerError().body(null);
         }
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Application>> getApplications(
+            @RequestParam(required = false) String searchText,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate updatedDate) {
+
+        List<Application> applications = applicationService.findApplications(searchText, createdDate, updatedDate);
+        return ResponseEntity.ok(applications);
+    }
+
 
     @PostMapping
     public ResponseEntity<ApplicationDTO> createApplication(@RequestBody ApplicationDTO applicationDTO) {
