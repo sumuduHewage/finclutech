@@ -5,8 +5,12 @@ import org.finclutech.dashboard.model.entity.Application;
 import org.finclutech.dashboard.repository.ApplicationRepository;
 import org.finclutech.dashboard.service.ApplicationService;
 import org.finclutech.dashboard.service.mapper.ApplicationMapper;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,6 +46,34 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public void deleteById(Long id) {
         applicationRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ApplicationDTO> findByCategory(String category) {
+        return applicationRepository.findByBusinessCategory(category).stream()
+                .map(ApplicationMapper.INSTANCE::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ApplicationDTO> findByStatus(String status) {
+        return applicationRepository.findByApplicationStatus(status).stream()
+                .map(ApplicationMapper.INSTANCE::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void storeApplications(List<ApplicationDTO> applicationDtos) {
+        try {
+            if (applicationDtos != null) {
+                applicationDtos.forEach(dto -> applicationRepository.save(ApplicationMapper.INSTANCE.toEntity(dto)));
+            }
+        } catch (DataAccessException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error accessing the database", e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error processing request", e);
+        }
     }
 
 }

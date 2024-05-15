@@ -26,3 +26,7 @@ spring:
 jwt:
   secret: "qG/cNJMcGHSUAgY7e3Kz4bmZKIiGEMrutCakmsJ3IMo="
   expiration: 3600000
+
+external:
+  api:
+    url: https://68.183.176.148:8901/v1/getNewApplications
