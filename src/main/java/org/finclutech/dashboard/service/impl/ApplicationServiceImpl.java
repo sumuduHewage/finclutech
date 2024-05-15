@@ -75,7 +75,15 @@ public class ApplicationServiceImpl implements ApplicationService {
     public void storeApplications(List<ApplicationDTO> applicationDtos) {
         try {
             if (applicationDtos != null) {
-                applicationDtos.forEach(dto -> applicationRepository.save(ApplicationMapper.INSTANCE.toEntity(dto)));
+                applicationDtos.forEach(dto -> {
+                    Application application = ApplicationMapper.INSTANCE.toEntity(dto);
+                    if (dto.getId() != null) {
+                        if (!applicationRepository.existsById(dto.getId())) {
+                            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Application with ID " + dto.getId() + " not found");
+                        }
+                    }
+                    applicationRepository.save(application);
+                });
             }
         } catch (DataAccessException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error accessing the database", e);

@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ApplicationDTO {
+    @JsonProperty("id")
+    private Long id;
     @JsonProperty("business_application_id")
     private Long businessApplicationId;
     @JsonProperty("sales_agent_first_name")
@@ -101,5 +103,13 @@ public class ApplicationDTO {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
