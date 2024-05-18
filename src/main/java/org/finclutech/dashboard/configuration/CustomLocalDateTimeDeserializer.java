@@ -13,6 +13,7 @@ import java.util.List;
 
 public class CustomLocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
     private static final List<DateTimeFormatter> FORMATS = Arrays.asList(
+            DateTimeFormatter.ISO_DATE_TIME,
             DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss a"),
             DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"),
             DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"),
